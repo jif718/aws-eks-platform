@@ -1,0 +1,18 @@
+# bootstrap/storageclass-gp3.yaml
+# Applied manually before ArgoCD exists. Ownership transfers to
+# gitops-lab (ArgoCD) in Phase 6; delete this file at that point.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+  encrypted: "true"
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+# EBS volumes are AZ-bound; binding must wait until the pod is scheduled
+# so the volume is created in the same AZ as its consumer.
+volumeBindingMode: WaitForFirstConsumer
