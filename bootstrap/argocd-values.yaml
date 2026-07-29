@@ -1,0 +1,14 @@
+# Applied manually via helm; ArgoCD adopts itself in Phase 6 (App of Apps).
+global:
+  # Cluster nodes are Graviton; ArgoCD images are multi-arch.
+  nodeSelector:
+    kubernetes.io/arch: arm64
+
+configs:
+  params:
+    # TLS terminates at the ALB in Phase 6; avoid a redirect loop.
+    server.insecure: true
+
+server:
+  service:
+    type: ClusterIP
