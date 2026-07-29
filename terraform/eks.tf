@@ -4,6 +4,9 @@ module "eks" {
 
   name               = var.project
   kubernetes_version = "1.33"
+  
+  create_kms_key    = false
+  encryption_config = {}
 
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
