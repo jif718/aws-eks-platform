@@ -67,12 +67,12 @@ log "waiting for load balancers to disappear"
 wait_zero "aws elbv2 describe-load-balancers --region $REGION \
   --query \"length(LoadBalancers[?VpcId=='$VPC_ID'])\" --output text" 30
 
-# --- 3. Wait for ENIs to be released ---------------------------------------
-# The ENIs outlive the LB object by several minutes and keep public addresses
-# mapped to the VPC, which blocks internet gateway detachment.
-log "waiting for ENI release"
+# --- 3. Wait for ELB ENIs to be released -----------------------------------
+# Only ELB-owned ENIs block teardown; node/NAT/control-plane ENIs are removed
+# by terraform destroy itself and must NOT be waited on here.
+log "waiting for ELB ENI release"
 wait_zero "aws ec2 describe-network-interfaces --region $REGION \
-  --filters Name=vpc-id,Values=$VPC_ID \
+  --filters Name=vpc-id,Values=$VPC_ID 'Name=description,Values=ELB *' \
   --query 'length(NetworkInterfaces)' --output text" 60
 
 # --- 4. Delete controller-created security groups --------------------------
