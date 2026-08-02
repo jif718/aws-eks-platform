@@ -7,7 +7,7 @@ REGION="${REGION:-us-west-2}"
 CLUSTER="${CLUSTER:-aws-eks-platform}"
 ARGOCD_VERSION="10.2.1"
 GITOPS_ROOT_APP="https://raw.githubusercontent.com/jif718/gitops-lab-aws/main/root-app.yaml"
-KUBECONFIG_PATH="${HOME}/.kube/aws.yaml"
+#KUBECONFIG_PATH="${HOME}/.kube/aws.yaml"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 log() { printf '%s  %s\n' "$(date +%T)" "$*"; }

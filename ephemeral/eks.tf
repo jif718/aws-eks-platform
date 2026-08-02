@@ -27,6 +27,12 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
+      metadata_options = {
+        http_endpoint               = "enabled"
+        http_tokens                 = "required"
+        http_put_response_hop_limit = 2
+      }
+      
       instance_types = ["t4g.large"]
       ami_type       = "AL2023_ARM_64_STANDARD"
       capacity_type  = "ON_DEMAND"
