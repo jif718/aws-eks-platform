@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Post-terraform cluster bootstrap. Run once after `terraform apply`.
-# Everything after the root app is reconciled by ArgoCD from gitops-lab-aws.
+# Everything after the root app is reconciled by ArgoCD from aws-platform-gitops.
 set -euo pipefail
 
 REGION="${REGION:-us-west-2}"
 CLUSTER="${CLUSTER:-aws-eks-platform}"
 ARGOCD_VERSION="10.2.1"
-GITOPS_ROOT_APP="https://raw.githubusercontent.com/jif718/gitops-lab-aws/main/root-app.yaml"
+GITOPS_ROOT_APP="https://raw.githubusercontent.com/jif718/aws-platform-gitops/main/root-app.yaml"
 #KUBECONFIG_PATH="${HOME}/.kube/aws.yaml"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
