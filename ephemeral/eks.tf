@@ -41,7 +41,20 @@ module "eks" {
       max_size     = 4
       desired_size = 2
 
-      disk_size = 40
+      # The module creates a custom launch template by default
+      # (use_custom_launch_template = true), and `disk_size` is silently
+      # dropped in that path. Root volume must be set on the LT instead.
+      block_device_mappings = {
+        xvda = {
+          device_name = "/dev/xvda"
+          ebs = {
+            volume_size           = 40
+            volume_type           = "gp3"
+            encrypted             = true
+            delete_on_termination = true
+          }
+        }
+      }
     }
   }
 }

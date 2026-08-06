@@ -5,7 +5,7 @@ set -euo pipefail
 trap 'echo "FAILED at line $LINENO" >&2' ERR
 
 REGION="${REGION:-us-west-2}"
-CLUSTER="${CLUSTER:-aws-eks-platform}"          # decoupled from repo name, do not rename
+CLUSTER="${CLUSTER:-aws-lab}"                   # must match var.project in ephemeral/
 AWS_ACCOUNT_ID="${AWS_ACCOUNT_ID:-765148471972}"
 ARGOCD_VERSION="10.2.1"
 EXPECTED_NODES="${EXPECTED_NODES:-2}"
@@ -48,8 +48,9 @@ kubectl get csidriver ebs.csi.aws.com >/dev/null \
   || { log "ebs.csi.aws.com not found — check terraform addon"; exit 1; }
 
 # Demote gp2 BEFORE promoting gp3 to avoid a two-default window.
+# Tolerate its absence: EKS may stop shipping a default gp2 StorageClass.
 kubectl patch storageclass gp2 -p \
-  '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+  '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}' || true
 kubectl apply -f "$SCRIPT_DIR/storageclass-gp3.yaml"
 
 # --- 4. ArgoCD -------------------------------------------------------------
@@ -66,9 +67,11 @@ helm upgrade --install argocd argo/argo-cd \
 kubectl apply -f "$SCRIPT_DIR/root-app.yaml"
 
 # --- 6. Status -------------------------------------------------------------
-PLATFORM_APPS="aws-load-balancer-controller external-dns"
+# platform-manifests owns the argocd Ingress, so it is what actually gates the
+# UI URL printed below.
+PLATFORM_APPS="aws-load-balancer-controller external-dns platform-manifests"
 for app in $PLATFORM_APPS; do
-  kubectl -n argocd wait --for=create "application/$app" --timeout=180s
+  kubectl -n argocd wait --for=create "application/$app" --timeout=300s
 done
 log "waiting for platform apps to become Healthy (ALB ~3 min)"
 for app in $PLATFORM_APPS; do

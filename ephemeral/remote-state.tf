@@ -5,7 +5,7 @@ data "terraform_remote_state" "dns" {
 
   config = {
     bucket = "tfstate-765148471972-us-west-2"
-    key    = "aws-eks-platform/dns.tfstate"
+    key    = "aws-lab/dns.tfstate"
     region = "us-west-2"
   }
 }

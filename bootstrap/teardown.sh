@@ -12,7 +12,7 @@
 set -euo pipefail
 
 REGION="${REGION:-us-west-2}"
-CLUSTER="${CLUSTER:-aws-eks-platform}"
+CLUSTER="${CLUSTER:-aws-lab}"
 TF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../ephemeral" && pwd)"
 export KUBECONFIG="${KUBECONFIG:-$HOME/.kube/aws.yaml}"
 
@@ -151,5 +151,5 @@ done
 # --- 5. Verify -------------------------------------------------------------
 log "remaining tagged resources (ACM cert and pending-deletion KMS key are expected):"
 aws resourcegroupstaggingapi get-resources --region "$REGION" \
-  --tag-filters Key=Project,Values=aws-eks-platform \
+  --tag-filters Key=Project,Values=aws-lab \
   --query 'ResourceTagMappingList[].ResourceARN' --output table

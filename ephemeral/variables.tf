@@ -7,5 +7,5 @@ variable "region" {
 variable "project" {
   description = "Name prefix applied to all resources"
   type        = string
-  default     = "aws-eks-platform"
+  default     = "aws-lab"
 }

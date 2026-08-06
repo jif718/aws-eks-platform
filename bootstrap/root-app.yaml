@@ -1,0 +1,24 @@
+# bootstrap/root-app.yaml
+# Vendored copy of aws-gitops/root-app.yaml so bootstrap is self-contained.
+# Keep the two in sync; ArgoCD self-heals from the aws-gitops copy afterwards.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jif718/aws-gitops.git
+    targetRevision: main
+    path: .
+    directory:
+      recurse: true
+      include: '{infra/*-app.yaml}'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

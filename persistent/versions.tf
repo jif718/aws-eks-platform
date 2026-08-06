@@ -11,7 +11,7 @@ terraform {
   # Separate state: these resources outlive the ephemeral cluster stack.
   backend "s3" {
     bucket       = "tfstate-765148471972-us-west-2"
-    key          = "aws-eks-platform/dns.tfstate"
+    key          = "aws-lab/dns.tfstate"
     region       = "us-west-2"
     encrypt      = true
     use_lockfile = true
@@ -23,7 +23,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project   = "aws-eks-platform"
+      Project   = "aws-lab"
       ManagedBy = "terraform"
     }
   }
