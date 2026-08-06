@@ -3,7 +3,7 @@ module "eks" {
   version = "~> 21.0"
 
   name               = var.project
-  kubernetes_version = "1.33"
+  kubernetes_version = "1.35"
   
   create_kms_key    = false
   encryption_config = null
