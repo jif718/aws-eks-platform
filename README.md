@@ -1,4 +1,4 @@
-# aws-platform-infra
+# aws-infra
 
 Terraform-managed AWS infrastructure for the EKS platform.
 
